@@ -8,6 +8,8 @@ import os
 import subprocess
 import socket
 
+messages = []
+
 app = Flask(__name__)
 
 nav_bar = """
@@ -57,7 +59,7 @@ nav_bar = """
 
 @app.route('/')
 def home():
-    return nav_bar
+    return render_template_string(nav_bar)
 
 @app.route('/kontakte')
 def kontakte():
@@ -114,24 +116,51 @@ def root():
 
          file_list = subprocess.check_output('ls', shell=True, cwd= os.getcwd()).decode('utf8').split('\n',))
 
-@app.route('/forum')
+@app.route('/forum', methods=['GET', 'POST'])
 def forum():
-    return render_template_string(nav_bar + """
-<h3> Forum </h3>
-<form action="/action_page.php">
-  <form action="/action_page.php">
-  <p><label for="w3review">Nachricht:</label></p>
-  <textarea id="w3review" name="message" rows="4" cols="50"></textarea>
-  <br>
-  <input type="submit" value="Senden ✉️">
-</form>
+    if request.method == 'POST':
+        message = request.form['message']
+        messages.append(message)
 
+        return render_template_string(nav_bar + """
+        <h3> Forum </h3>
+        <form action="/forum" method="post">
+        <div align="left" style="width: px; height: 300px; overflow-y: auto; border: 1px solid #ccc;">
+         <div>
+          {% for message in messages %}
+           <p>&nbspAbsenderName: {{ message }}</p><br></br>
+        {% endfor %}
+          </div>
+         </div>
+         <p><label>Stelle eine Frage:</label></p>
+          <textarea id="message" name="message" rows="4" cols="50"></textarea>
+          <br>
+          <input type="submit" value="Senden ✉️">
+        </form>
+        </body>
+        </html>
+        """, message=message,
+             messages=messages)
+    else:
+        return render_template_string(nav_bar + """
+        <h3> Forum </h3>
+        <form action="/forum" method="post">
+        <div align="left" style="width: px; height: 300px; overflow-y: auto; border: 1px solid #ccc;">
+         <div>
+          {% for message in messages %}
+           <p>&nbspAbsenderName: {{ message }}</p><br></br>
+          {% endfor %}
+          </div>
+         </div>
+         <p><label>Stelle eine Frage:</label></p>
+          <textarea id="message" name="message" rows="4" cols="50"></textarea>
+          <br>
+          <input type="submit" value="Senden ✉️">
+        </form>
+        </body>
+        </html>
+        """)
 
-
-</body>
-</html>
-
-""")
 
 @app.route('/cd')
 def cd():
@@ -148,4 +177,3 @@ def view():
 
 if __name__ == '__main__':
     app.run(debug=True, port=3000)
-
