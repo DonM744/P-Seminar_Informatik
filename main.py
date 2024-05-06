@@ -3,6 +3,7 @@
 import shutil
 from flask import Flask
 from flask import render_template_string, redirect, request
+from flask import render_template 
 
 import os
 import subprocess
@@ -11,6 +12,11 @@ import socket
 messages = []
 
 app = Flask(__name__)
+
+@app.route('/kalender')
+def kalender():
+    return render_template('cal.html')
+
 
 nav_bar = """
  <!DOCTYPE html>
@@ -51,6 +57,7 @@ nav_bar = """
                 <li><a href="/kontakte">Kontakte</a></li>
                 <li><a href="/dateien">Dateien</a></li>
                 <li><a href="/forum">Forum</a></li>
+                <li><a href="/kalender">Kalender</a></li>
             </ul>
         </nav>
     </body>
@@ -160,6 +167,8 @@ def forum():
         </body>
         </html>
         """)
+
+
 
 
 @app.route('/cd')
