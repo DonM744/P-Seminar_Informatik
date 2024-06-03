@@ -50,6 +50,7 @@ nav_bar = """
                 <li><a href="/">Home</a></li>
                 <li><a href="/kontakte">Kontakte</a></li>
                 <li><a href="/dateien">Dateien</a></li>
+                <li><a href="/kalendar">Kalendar</a></li>
                 <li><a href="/forum">Forum</a></li>
             </ul>
         </nav>
