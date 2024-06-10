@@ -13,13 +13,15 @@ app.secret_key = 'geheim'
 users = {'test': 'test', 'user' : 'user'}
 
 
-nav_bar = """
+nav_bar = """        
+#Navigationsleiste mit Formatierung
 <!DOCTYPE html>
 <html>
 <head>
     <title>Nachhilfemanager</title>
     <style>
-        nav ul {
+    <!--Anlegen des Menüs für Anwendungen-->
+        nav ul {            <!--Formatierung des Menüs-->
             list-style-type: none;
             margin: 0;
             padding: 0;
@@ -29,7 +31,7 @@ nav_bar = """
         nav li {
             float: left;
         }
-        nav li a {
+        nav li a {           <!--Textformatierung-->
             display: block;
             color: white;
             text-align: center;
@@ -45,6 +47,7 @@ nav_bar = """
 <body>
     <h1>Nachhilfemanager 🏫</h1>
     <nav>
+    <!--Anlegen der Links zu Anwendungen-->
         <ul>
             <li><a href="/">Home</a></li>
             <li><a href="/kontakte">Kontakte</a></li>
@@ -60,7 +63,7 @@ nav_bar = """
 </body>
 </html>
 """
-
+#Beschränkung für login-pflichtige Aktionen
 def login_required(f):
     def wrap(*args, **kwargs):
         if 'username' not in session:
@@ -70,10 +73,12 @@ def login_required(f):
     return wrap
 
 @app.route('/')
+#Methode zum Aufrufen des Home-Bildschirms
 def home():
     return render_template_string(nav_bar)
 
 @app.route('/login', methods=['GET', 'POST'])
+#Methode zum Einloggen
 def login():
     if request.method == 'POST':
         username = request.form['username']
@@ -93,11 +98,13 @@ def login():
     ''')
 
 @app.route('/logout')
+#Methode zum Ausloggen
 def logout():
     session.pop('username', None)
     return redirect(url_for('home'))
 
 @app.route('/kontakte')
+#Methode zum Aufrufen der Kontakte
 @login_required
 def kontakte():
     return render_template_string(nav_bar + """
@@ -123,8 +130,10 @@ def kontakte():
     """)
 
 @app.route('/dateien')
+#Methode zum Aufrufen der Dateien
 @login_required
 def root():
+    #Verzeichnis von Dateien
     return render_template_string(nav_bar + '''
         <html>
           <head>
@@ -160,6 +169,7 @@ def back():
     return redirect('/dateien')
 
 @app.route('/forum', methods=['GET', 'POST'])
+#Forum zum Posten von Nachrichten
 @login_required
 def forum():
     if request.method == 'POST':
@@ -170,6 +180,7 @@ def forum():
         <h3>Forum</h3>
         <form action="/forum" method="post">
             <div align="left" style="width: px; height: 300px; overflow-y: auto; border: 1px solid #ccc;">
+            #Speicherung der Nachrichten im Forum
                 <div class="message-container">
                     <div>
                           {% for message in messages %}
